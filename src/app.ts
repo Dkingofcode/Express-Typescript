@@ -1,5 +1,5 @@
  import express, {NextFunction, Request, Response} from "express";
-
+  import routes from "./routes";
 const app = express();
 
 app.use(express.json());
@@ -28,6 +28,8 @@ app.get("/error", async (req, res) => {
 });
 
 app.use(middleware({ name: "OladepoDavo" }));
+
+routes(app);
 
 app.get('/api/books/:bookId/:authorId', (req: Request<{bookId: 'string', authorId: string}, {}, {name: string}, {}>, res: Response, next: NextFunction) => {
    // @ts-ignore
