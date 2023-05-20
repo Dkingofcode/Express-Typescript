@@ -1,4 +1,4 @@
-import express, {NextFunction, Request, Response} from "express";
+ import express, {NextFunction, Request, Response} from "express";
 
 const app = express();
 
@@ -14,9 +14,22 @@ const middleware =
    next();
 };
 
+async function throwsError(){
+    throw new Error("Boom!");
+}
+
+app.get("/error", async (req, res) => {
+   try {
+     await throwsError();
+     res.sendStatus(200);
+   } catch (e) {
+      res.status(400).send("Something bad happened");
+   }
+});
+
 app.use(middleware({ name: "OladepoDavo" }));
 
-app.get('/api/books/:bookId/:authorId', (req: Request, res: Response, next: NextFunction) => {
+app.get('/api/books/:bookId/:authorId', (req: Request<{bookId: 'string', authorId: string}, {}, {name: string}, {}>, res: Response, next: NextFunction) => {
    // @ts-ignore
    console.log(req.name);
    next();
