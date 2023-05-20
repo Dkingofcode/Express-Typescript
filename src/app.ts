@@ -5,19 +5,26 @@ const app = express();
 app.use(express.json());
 
 
-function handleGetBookOne(req: Request, res: Response, next: NextFunction) {
- console.log(req.params);
+const middleware = 
+({ name }: { name: string }) =>
+(req: Request, res: Response, next: NextFunction) => {
+   // @ts-ignore
+   req.name = name;
  
- next()
-}
+   next();
+};
 
-function handleGetBookTwo(req: Request, res: Response, next: NextFunction) {
-   console.log('second handler');
-   return res.send(req.params); 
-}
+app.use(middleware({ name: "OladepoDavo" }));
+
+app.get('/api/books/:bookId/:authorId', (req: Request, res: Response, next: NextFunction) => {
+   // @ts-ignore
+   console.log(req.name);
+   next();
+  }
+);
 
 
-app.get('/api/books/:bookId/:authorId', [handleGetBookOne, handleGetBookTwo])
+
 // Request Chaining  
 
 // app.route("/").get((req: Request, res: Response) => {
@@ -38,5 +45,5 @@ app.all('/api/all', (req: Request, res: Response) => {
 })
 
 app.listen(3000, () => {
-    console.log("Application listening at http://localhost:3000")
+    console.log("Application listening at http://localhost:3000");
 })
